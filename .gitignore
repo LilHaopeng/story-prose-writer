@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.qa/
+.pytest_cache/
+*.docx
+!skills/**/assets/*.docx

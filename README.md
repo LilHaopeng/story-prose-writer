@@ -2,87 +2,95 @@
 
 # 小说正文写作 · Story Prose Writer
 
-面向中文小说的正文写作 Agent Skill：依据已有世界观、大纲与作者意图，完成试写、逐章写作、修订和连续性审校。当前版本 **v1.0.0**。
+**简体中文** | [English](README_EN.md)
 
-写作时保留世界规则和章节因果，也给不同题材、叙事视角与作者声口留下空间。它提供创作流程和辅助工具，不能保证模型永不出错，也不能代替作者对剧情、文字与人物的判断。
+面向长中短篇小说的正文创作 Agent Skill：基于已有的世界观、故事大纲与创作意图，完成篇幅盘点、声口校准、逐章写作、润色修订、连续性审校与排版导出。当前版本 **v1.1.0**。
 
-## 能做什么
+默认采用**简体中文**起笔，贴合现代汉语的零形回指、意合推进与留白节奏；同时也支持按你的指令切换为**英文（English）**、**繁体中文**或其他语言创作，自动匹配对应语种的叙事习惯、质检规则与成书排版。
 
-- **识别现有项目**：查阅世界观、章节安排、已写正文和相关记录，支持本系列项目的约定，也接受用户提供的其他等价材料。可选台账缺失时，依据已有内容整理本章所需摘要；关键事实不明时标记未知。
-- **遵循正典与大纲**：结合已确认规则、人物认知以及章节中的选择、代价和状态变化写作；发现实质冲突时说明依据与影响，提出修复选择。普通细节可在不违背设定的范围内创作。
-- **估算篇幅**：按需盘点已发现的细纲，提供精简、标准、丰满三档预算。已知全书章数或自定单章目标时可另列预算；未提供总章数时不猜测全书字数。
-- **设计文风与声口**：提供八种可组合的风格方向，从叙述距离、句法节奏、感官、词汇与对白等方面校准；必要时针对本书场景试写。用户已明确风格或要求直接写作时，无须重复确认。
-- **自定义风格研究**：结合可用的联网工具和可核实来源提炼技法；无法联网时，依据用户材料，或明确说明尚未核实，再决定如何继续。
-- **长篇写作与审校**：按需装配本章大纲、前章结尾和相关角色、线索、规则；按项目选择的叙事视角控制信息边界，并维护需要的交接和状态记录。
-- **去 AI 味与节奏调整**：用语境判断套话、重复和空泛解释，保留自然对白。节拍、句长、场景数量与章末形式是可选方法，依故事和作者偏好调整。
-- **按需汇编**：在宿主具备文档工具及相应依赖时，可制作 DOCX 并进行渲染核对；本仓库不包含专门的 DOCX 生成器。
+## 核心特性
 
-## 与世界观、大纲项目配合
+- **大纲消融与老手视角**：将细纲中的目标、冲突与代价自然藏入人物手头的日常事务与错位对白，消除分段打卡的“大纲腔”；土著视角对世界常态熟视无睹，只在遇到摩擦与反常时显影设定，拒绝借角色内心给读者写制度说明书。
+- **母语松弛感与防反向紧绷**：遵循承前省主语、半句留白、去英文量词翻译腔等母语准则；引入感官配额与自由间接引语，避免把去 AI 味写成“句句端茶盏、摸刀柄”的僵硬舞台调度。
+- **原声调音叉防漂移**：支持八大预设文风组合及自定义流派检索解构，在 `00_文风与声口卡.md` 中直接固化 150–250 字经认可的标杆正文切片与角色原声台词，连载数十章依然保持开书声口。
+- **页面呼吸感与视觉律动**：主动错落饱满叙述段、短促动作段、无旁白裸对白连击与单句气口，打破满屏等高的“豆腐块”段落；清理滥用强调引号（“引号麻子脸”），并在章节交接时错开相邻章节的起收镜头。
+- **按需上下文与正典守恒**：每章仅装配出场角色状态、相关伏笔与触发规则，严守视角信息边界以防提前漏底；定稿后依据正文实际发生的事实回写交接卡与追踪台账。
+- **双端 DOCX 排版导出**：内置小说排版构建器，一键生成**实体书沉浸版（`book`，宋体/Georgia 衬线 + 首行缩进 + 居中星号转场）**或**屏幕轻读版（`screen`，舒展段距 + 无缩进清爽版面）**，自动拦截内部工程编号外泄。
 
-三者可以分别使用，也可以依次衔接：
+## 配套创作工作流
 
-1. [小说世界观架构师 · Story World Architect](https://github.com/LilHaopeng/story-world-architect)：构建设定、世界规则及其交接材料。
-2. [小说大纲架构师 · Story Outline Architect](https://github.com/LilHaopeng/story-outline-architect)：组织故事弧、剧情段与章节安排，并引用适用的世界观。
-3. **小说正文写作 · Story Prose Writer**：依据已有材料写作和修订章节，检查对应关系及跨章连续性。
+三个同系列技能既可独立服务现有文稿，也可串联成从设定、架构到成书的完整管线：
 
-世界观的正典与已锁定的大纲仍以项目和作者确认为准。需要调整重要设定或锁定大纲时，先指出影响并按用户授权处理；正文中实际发生的变化再依据证据回写相应记录。使用者不必为了适配本 skill 改造已有目录。
+1. [小说世界观架构师 · Story World Architect](https://github.com/LilHaopeng/story-world-architect)：构建自洽运转的世界规则、社会生态，并向下游交接设定契约与日常语言肌理。
+2. [小说大纲架构师 · Story Outline Architect](https://github.com/LilHaopeng/story-outline-architect)：从创作初衷推演故事弧、剧情段与具象章纲。
+3. **小说正文写作 · Story Prose Writer**：承接上游设定与章纲（或你自己的大纲笔记），完成文风定调、章节撰写、语感打磨与成稿交付。
 
-## 安装到 Codex
+## 安装方式
 
-在支持 `skill-installer` 的 Codex 中发送：
+1. **通过 `skill-installer` 安装（Codex 等）**
+   ```text
+   $skill-installer 请从 https://github.com/LilHaopeng/story-prose-writer 安装 skills/story-prose-writer
+   ```
+2. **手动复制到本地技能目录（Antigravity / Claude Code / Codex / Cursor）**
+   克隆本仓库，将 `skills/story-prose-writer/` 目录完整复制到对应客户端的技能目录：
+   - **Antigravity**：`~/.gemini/config/skills/story-prose-writer`
+   - **Claude Code**：`~/.claude/skills/story-prose-writer`
+   - **Codex**：`~/.codex/skills/story-prose-writer` 或 `~/.agents/skills/story-prose-writer`
+   - **Cursor**：`~/.cursor/skills/story-prose-writer`
 
-```text
-$skill-installer 请从 https://github.com/LilHaopeng/story-prose-writer 安装 skills/story-prose-writer
-```
+核心辅助脚本仅使用 Python 3.10+ 标准库；如需使用 `build_prose_docx.py` 导出 Word 文档，可执行 `python -m pip install -r requirements.txt` 安装 `python-docx`。
 
-也可以克隆或下载本仓库，将 `skills/story-prose-writer/` **整个文件夹**复制到当前 Codex 支持的技能目录，保留 `SKILL.md`、`references/` 和 `scripts/`。本机使用的个人目录是 `%USERPROFILE%\.codex\skills\story-prose-writer`；如设置了 `CODEX_HOME`，则对应 `%CODEX_HOME%\skills\story-prose-writer`。不同宿主的目录、工具权限和发现机制可能不同，请以实际配置为准。已有同名 skill 时请先备份，避免覆盖自己的修改；如果安装后未显示，可重新打开 Codex。
+## 快速上手
 
-辅助脚本使用 Python 标准库，建议 Python 3.10 或更高版本。仅阅读工作流程不要求执行脚本；未运行脚本时，不应将其检查描述为已通过。
-
-## 开始使用
+**默认简体中文续写**：
 
 ```text
 $story-prose-writer
-请根据这个项目现有世界观、第一章正文和第二章细纲，准备续写第二章。
-先检查能确认的角色状态、信息边界和承接问题；不确定的内容标为未知。
-我希望单章约 3500 字，保持已有文风。
+请根据当前项目的世界观、第一章正文和第二章细纲续写第二章。
+保持现有冷硬市井文风，单章约 3500 字，注意把博弈藏进日常动作里，控制页面段落呼吸感。
 ```
 
-也可以只要求估算、试写、修订、审校或导出，不必每次执行完整流程。涉及的材料应由用户提供或由用户授权读取；大纲与世界观不是本 skill 的必然固定目录。
-
-## 三个辅助脚本
-
-| 脚本 | 实际职责与边界 |
-|---|---|
-| `init_prose_project.py` | 创建缺失的正文目录、声口卡和部分交接台账；支持 `--dry-run`，跳过已有文件，不会自动从正文提取状态。 |
-| `estimate_word_count.py` | 识别标准命名的细纲文件，按章节数乘以固定档位计算预算；可传入已知总章数或单章目标，分别展示已覆盖和其余部分。文件数不一定等于实际章数，不会语义理解冲突密度或判断故事能否承载指定篇幅。 |
-| `lint_prose.py` | 以规则扫描部分格式、套话与句式，统计基本汉字、段落和句长，按需提示字数偏差。命中是待复核提醒，不证明有 AI 味；可按规则忽略，不自动修改正文，也不检验正典或文学质量。 |
-
-在仓库根目录运行（把路径替换成自己的项目）：
+**指定英文或其他语言起笔**：
 
 ```text
-python skills/story-prose-writer/scripts/init_prose_project.py --root <项目根> --title <书名> --dry-run
-python skills/story-prose-writer/scripts/estimate_word_count.py --root <项目根>
-python skills/story-prose-writer/scripts/estimate_word_count.py --root <项目根> --total-chapters 30 --target-words 3500
-python skills/story-prose-writer/scripts/lint_prose.py --file <章节文件> --target-words 3500
+$story-prose-writer
+Write Chapter 1 in English (~3,000 words) based on our outline and world notes, using a crisp close-third-person noir voice with natural dialogue pacing.
 ```
 
-`--total-chapters` 只填写已知并确认的全书计划章数；不是必填项。初始化去掉 `--dry-run` 后才创建文件。带空格的路径请加引号；各脚本完整参数见 `--help`。
+你也可以单独调用其中任意一环：盘点字数预算、做 A/B 文风试写、润色旧稿去 AI 味、核对跨章吃书问题，或将完结章节打包为 `.docx`。
+
+## 配套辅助脚本
+
+| 脚本 | 功能说明 |
+|---|---|
+| `init_prose_project.py` | 非破坏性初始化 `正文/`、`追踪/`、`交付/` 目录及写作状态、文风声口卡、章节交接模板（支持 `--lang` 与 `--dry-run`）。 |
+| `estimate_word_count.py` | 盘点已有细纲覆盖情况，输出精简/标准/丰满三档篇幅区间与单章目标对照。 |
+| `lint_prose.py` | 旁白与对白分流质检（支持 `--lang auto\|zh\|en`）：检测套话模板、连续等高“豆腐块”段落、局部匀速句窗、高频词复读、代词过密与碎引号噪点。 |
+| `build_prose_docx.py` | 将单章或整本章节 Markdown 编译为 `book`（纸书衬线缩进）或 `screen`（屏幕轻读）排版的 `.docx`，自动拦截工作台编号泄露。 |
+
+常用命令示例：
+
+```bash
+python skills/story-prose-writer/scripts/init_prose_project.py --root <项目根> --title "旧港夜航"
+python skills/story-prose-writer/scripts/estimate_word_count.py --root <项目根> --total-chapters 24 --target-words 3500
+python skills/story-prose-writer/scripts/lint_prose.py --file <章节.md> --target-words 3500
+python skills/story-prose-writer/scripts/build_prose_docx.py --chapters-dir <项目根>/正文 --out <项目根>/交付/旧港夜航_正文.docx --title "旧港夜航" --preset book
+```
+
+运行回归测试：
+
+```bash
+python -B -m unittest discover -s tests -v
+```
 
 ## 参考文档
 
-- [产物契约与接口](skills/story-prose-writer/references/artifact-contract.md)：项目资料识别、权责及台账。
-- [字数预估与缩放](skills/story-prose-writer/references/word-count-and-scaling.md)：篇幅覆盖、不确定性与大纲缩放。
-- [文风与去 AI 味](skills/story-prose-writer/references/style-and-anti-ai.md)：文风参数、来源核实、试写和语言检查。
-- [长篇执行](skills/story-prose-writer/references/long-form-execution.md)：上下文装配、视角、节奏和交接。
-- [审校与连续性](skills/story-prose-writer/references/audit-and-continuity.md)：正典、人物、连续性核对及按需 DOCX 交付。
+- [产物契约与上下游接口](skills/story-prose-writer/references/artifact-contract.md)：目录约定、所有权边界、原声调音叉与交接卡模板。
+- [字数预估与双向缩放](skills/story-prose-writer/references/word-count-and-scaling.md)：篇幅档位及压缩、扩充手法。
+- [文风、母语语感与页面观感](skills/story-prose-writer/references/style-and-anti-ai.md)：八大文风矩阵、自定义流派解构、汉语语感四律、页面呼吸感与多语种适配。
+- [长篇连载执行与大纲消融](skills/story-prose-writer/references/long-form-execution.md)：按需上下文装配、大纲消融律、老手视角与连章起收错峰。
+- [正典审校与 DOCX 交付](skills/story-prose-writer/references/audit-and-continuity.md)：六维审校表、状态回写与双端排版规范。
 
-## 使用边界与数据
+## 隐私与许可证
 
-辅助脚本在当前环境中读取或写入用户指定的本地文件，不主动上传原稿。使用模型或联网服务时，数据处理遵循相应服务和用户设置。发布问题或寻求帮助时，请避免上传私人原稿、密钥或未获授权的第三方材料。
-
-脚本与检查清单不能保证人物一致、剧情无漏洞或读者喜欢作品；正式交付前仍需结合原文、设定和项目目标审阅。DOCX 的生成、转换与视觉验收取决于实际可用工具、字体及环境，应分别确认。
-
-## 许可证
-
-本仓库使用 [MIT License](LICENSE)。本项目不是 OpenAI 官方产品；仓库许可不要求用户公开自己的小说或世界观。
+所有本地脚本仅在当前工作目录内读写文件，不会上传任何原稿。本仓库采用 [MIT License](LICENSE) 开源（Copyright © 2026 LilHaopeng）。

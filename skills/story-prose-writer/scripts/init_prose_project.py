@@ -14,20 +14,21 @@ def safe_root(raw: str) -> Path:
     return root
 
 
-def templates(title: str) -> dict[str, str]:
+def templates(title: str, lang: str = "简体中文") -> dict[str, str]:
     return {
         "正文/写作状态.md": f"""# 正文写作状态
 
 - 项目名：{title}
+- 写作语言：{lang}
 - 当前工作模式：estimate
 - 绑定的大纲版本：[待确认]
 - 绑定的世界观版本：[待确认]
 - 字数配置档位：[待确认；可自定义]
-- 单章目标字数区间：[待确认]
-- 全书预估总字数：[待确认]
+- 单章目标规模：[待确认]
+- 全书预估总规模：[待确认]
 - 当前已锁定文风：见 `正文/00_文风与声口卡.md`（状态：draft）
 - 已完成章节：无
-- 当前累计净字数：0
+- 当前累计净规模：0
 - 下一待写章节：CH-001
 - 待确认事项：字数档位与开篇试写文风确认
 """,
@@ -35,28 +36,33 @@ def templates(title: str) -> dict[str, str]:
 
 - 项目名：{title}
 - 状态：draft
+- 写作语言：{lang}
 - 模式来源：预设方向 / 自定义风格 / 用户提供样本 [待确认]
 - 基底与调整方向：[待试写确认]
 - 文风资料及依据：
-  - 研究状态：[待确认：已联网核实 / 用户提供 / 未联网核实]
+  - 研究状态：[待确认：已联网核实 / 用户提供 / 暂拟未核实]
   - 参考资料和链接：[待填写；未知时不编造来源]
-  - 来源支持的技法与个人归纳：[分别记录]
-- 叙事视角与信息边界：[依用户、世界观与大纲确认，可为限知、多视角或其他形式]
+  - 核心叙事技法提炼：[待填写]
+- 叙事视角与信息边界：[依用户、世界观与大纲确认]
 - 叙述距离：[待试写确认]
-- 句法与节奏：[待试写确认；随场景变化，不设统一句长或段落上限]
-- 感官与意象：[待试写确认]
-- 词汇肌理与修辞：[待试写确认]
-- 对白与留白：[待试写确认；不设固定占比]
-- 本书专属禁用或注意表达：[用户确认后填写；结合语境判断]
+- 句法与页面呼吸节奏：[长短段错落、裸对白留白、避免连续等高豆腐块段落]
+- 感官锚点与世界日常词表：[每场精选 1–2 处核心感官；记录本作常用称谓、器物与行话]
+- 本书修辞禁区：[禁止照搬技能示例动作；严控碎引号、代词堆叠与句尾解释尾巴]
+
+## 定调原声切片（Voice Tuning Fork · 每次动笔必读）
+
+> 试写确认后，在此粘贴 150–250 字经认可的本书标杆正文切片，锁死语调、句长弹性与留白手感：
+>
+> [待试写确认后填入]
 
 ## 核心角色声口表（Voice Matrix）
 
-| 角色名 | 身份与性格底色 | 句式与用词习惯 | 潜台词与情绪防御机制 | 标志性小动作（克制使用） | 绝对不会说的话 |
+| 角色名 | 身份与性格底色 | 句式与用词特征 | 潜台词与防御习惯 | 代表性原声台词（1–2 句样本） | 绝对不会说的话 |
 |---|---|---|---|---|---|
 """,
         "追踪/章节交接.md": """# 章节交接台账
 
-> 每完成一章正文后按已知内容追加交接卡，记录章末时间、地点、人物状态、伤势道具、信息边界及末尾原文；不确定的内容标记为未知。
+> 每完成一章正文后追加交接卡，记录章末时间、地点、人物状态、伤势道具、本章起收镜头方式、信息边界及章末 1–3 句原文；未知内容标记为未知。
 """,
         "追踪/角色状态.md": """# 角色状态台账
 
@@ -72,6 +78,11 @@ def main() -> int:
     )
     parser.add_argument("--root", required=True, help="Fiction project root")
     parser.add_argument("--title", default="未命名小说", help="Project title")
+    parser.add_argument(
+        "--lang",
+        default="简体中文",
+        help="Default writing language recorded in project templates (default: 简体中文)",
+    )
     parser.add_argument(
         "--dry-run", action="store_true", help="Show actions without writing"
     )
@@ -95,7 +106,9 @@ def main() -> int:
 
     created: list[Path] = []
     skipped: list[Path] = []
-    for rel, content in templates(args.title.strip() or "未命名小说").items():
+    title = args.title.strip() or "未命名小说"
+    lang = args.lang.strip() or "简体中文"
+    for rel, content in templates(title, lang).items():
         dest = root / Path(rel)
         if dest.exists():
             skipped.append(dest)
@@ -106,6 +119,7 @@ def main() -> int:
             dest.write_text(content.rstrip() + "\n", encoding="utf-8")
 
     print(f"root={root}")
+    print(f"lang={lang}")
     print(f"created={len(created)}")
     for p in created:
         print(f"  + {p.relative_to(root)}")
